@@ -364,6 +364,7 @@ OpenRudder follows [Semantic Versioning](https://semver.org/) (SemVer):
 - **Current Version:** 1.0.0-SNAPSHOT (Development)
 - **Release History:** https://github.com/scalefirstai/openrudder/releases
 - **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+- **Release Process:** [RELEASING.md](RELEASING.md)
 
 ### Version Identifiers
 
@@ -372,11 +373,44 @@ Each release has a unique version identifier:
 - Development snapshots: `MAJOR.MINOR.PATCH-SNAPSHOT` (e.g., 1.0.0-SNAPSHOT)
 - Release candidates: `MAJOR.MINOR.PATCH-RC.N` (e.g., 1.0.0-RC.1)
 
+### Git Tags
+
+Each release is identified in Git using tags:
+- **Format:** `v{VERSION}` (e.g., `v1.0.0`)
+- **View Tags:** `git tag -l`
+- **Checkout Release:** `git checkout v1.0.0`
+- **All Tags:** https://github.com/scalefirstai/openrudder/tags
+
 ### Accessing Releases
 
 - **Latest Stable:** https://github.com/scalefirstai/openrudder/releases/latest
 - **All Releases:** https://github.com/scalefirstai/openrudder/releases
 - **Maven Central:** https://search.maven.org/artifact/io.openrudder/openrudder-parent
+
+### Version Control & Change Tracking
+
+The source repository tracks all changes with full transparency:
+
+✅ **Interim Versions**: All commits available for collaborative review  
+✅ **Change Tracking**: Every change includes author, timestamp, and description  
+✅ **Git History**: `git log` shows complete development history  
+✅ **Pull Requests**: Code review process visible in PR history  
+✅ **Blame/Annotate**: `git blame` shows who changed what and when
+
+**View Changes:**
+```bash
+# All commits
+git log
+
+# Changes between versions
+git log v1.0.0..v1.1.0
+
+# Who changed a file
+git blame <filename>
+
+# Changes by author
+git log --author="Name"
+```
 
 ### Source Repository
 
@@ -385,8 +419,22 @@ The source repository includes:
 - ✅ Development branches for feature work
 - ✅ Tagged releases for production use
 - ✅ Pull requests for community review
+- ✅ Complete Git history with author and timestamp information
 
 **Repository:** https://github.com/scalefirstai/openrudder
+
+### Security & CVE Tracking
+
+Release notes identify all publicly known vulnerabilities fixed:
+- **CVE Tracking:** Each release documents fixed CVEs
+- **Security Advisories:** https://github.com/scalefirstai/openrudder/security/advisories
+- **Vulnerability Reports:** See [SECURITY.md](SECURITY.md)
+
+Example from release notes:
+```markdown
+### Security Fixes
+- CVE-2024-XXXXX: Description of vulnerability and fix
+```
 
 ## 📄 License
 
