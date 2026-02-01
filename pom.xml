@@ -23,7 +23,7 @@
         <reactor.version>2023.0.1</reactor.version>
         <langchain4j.version>0.26.1</langchain4j.version>
         <spring-ai.version>0.8.0-SNAPSHOT</spring-ai.version>
-        <antlr4.version>4.13.1</antlr4.version>
+        <antlr4.version>4.13.2</antlr4.version>
         <neo4j.version>5.15.0</neo4j.version>
         <debezium.version>2.5.0.Final</debezium.version>
         <micrometer.version>1.12.1</micrometer.version>
