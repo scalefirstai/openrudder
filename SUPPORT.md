@@ -36,20 +36,50 @@ Ask questions on Stack Overflow with the tag:
 - **Tag**: `openrudder`
 - **[Browse Questions](https://stackoverflow.com/questions/tagged/openrudder)**
 
-## 🐛 Bug Reports
+## 🐛 Bug Reports & Feature Requests
 
-Found a bug? Please report it:
-- **[Create Bug Report](https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md)**
-- Check existing issues first to avoid duplicates
-- Provide detailed reproduction steps
-- Include environment information
+### Issue Tracker
 
-## 💡 Feature Requests
+**URL**: https://github.com/scalefirstai/openrudder/issues
 
-Have an idea for a new feature?
-- **[Submit Feature Request](https://github.com/scalefirstai/openrudder/issues/new?template=feature_request.md)**
-- Describe your use case
-- Explain why this feature would be valuable
+We use GitHub Issues for tracking all bugs, enhancements, and questions.
+
+### Report a Bug
+
+**URL**: https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md
+
+When reporting bugs, please include:
+- OpenRudder version
+- Java version
+- Operating system
+- Steps to reproduce
+- Expected vs actual behavior
+- Relevant logs or stack traces
+
+**Response Time**: We acknowledge majority (>50%) of bug reports within 5 business days.
+
+### Request a Feature
+
+**URL**: https://github.com/scalefirstai/openrudder/issues/new?template=feature_request.md
+
+When requesting features, describe:
+- Your use case
+- Proposed solution
+- Why this would be valuable
+
+**Response Time**: We respond to majority (>50%) of enhancement requests within 10 business days.
+
+### Public Archive
+
+**URL**: https://github.com/scalefirstai/openrudder/issues?q=
+
+All bug reports and responses are publicly archived and searchable:
+- Publicly accessible (no login required)
+- Fully searchable by keywords, labels, dates
+- Permanently available
+- Indexed by search engines
+
+**Policy**: See our [Issue Response Policy](https://github.com/scalefirstai/openrudder/blob/main/.github/ISSUE_RESPONSE_POLICY.md)
 
 ## 📧 Commercial Support
 

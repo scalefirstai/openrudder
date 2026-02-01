@@ -296,11 +296,15 @@ mvn clean install
 
 ## 🐛 Bug Reports & Feature Requests
 
-We use GitHub Issues to track bugs and feature requests:
+### Issue Tracker
 
-- **Report a Bug:** https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md
-- **Request a Feature:** https://github.com/scalefirstai/openrudder/issues/new?template=feature_request.md
-- **View All Issues:** https://github.com/scalefirstai/openrudder/issues
+**URL**: https://github.com/scalefirstai/openrudder/issues
+
+We use GitHub Issues for tracking all bugs, enhancements, and questions.
+
+### Report a Bug
+
+**URL**: https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md
 
 When reporting bugs, please include:
 - OpenRudder version
@@ -309,6 +313,43 @@ When reporting bugs, please include:
 - Steps to reproduce
 - Expected vs actual behavior
 - Relevant logs or stack traces
+
+### Request a Feature
+
+**URL**: https://github.com/scalefirstai/openrudder/issues/new?template=feature_request.md
+
+When requesting features, describe:
+- Your use case
+- Proposed solution
+- Why this would be valuable
+
+### Response Commitments
+
+We are committed to responding to community issues:
+
+- **Bug Reports**: Acknowledge **majority (>50%)** within 5 business days
+- **Enhancement Requests**: Respond to **majority (>50%)** within 10 business days
+- **Target**: We aim for 100% acknowledgment of bugs and 80% response to enhancements
+
+**Policy**: [Issue Response Policy](.github/ISSUE_RESPONSE_POLICY.md)
+
+### Public Archive
+
+**URL**: https://github.com/scalefirstai/openrudder/issues?q=
+
+All bug reports and responses are publicly archived and searchable:
+
+- **All Issues**: https://github.com/scalefirstai/openrudder/issues?q=
+- **Open Issues**: https://github.com/scalefirstai/openrudder/issues
+- **Closed Issues**: https://github.com/scalefirstai/openrudder/issues?q=is%3Aissue+is%3Aclosed
+- **Bug Reports**: https://github.com/scalefirstai/openrudder/issues?q=label%3Abug
+- **Enhancements**: https://github.com/scalefirstai/openrudder/issues?q=label%3Aenhancement
+
+The archive is:
+- ✅ Publicly accessible (no login required)
+- ✅ Fully searchable
+- ✅ Permanently available
+- ✅ Indexed by search engines
 
 ## � Security Vulnerabilities
 
