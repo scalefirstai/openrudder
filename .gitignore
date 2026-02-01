@@ -39,7 +39,7 @@ logs/
 application-local.yml
 application-local.properties
 
-# Requirements
-./Requirement
-./docs
-./scripts
+# Requirements and documentation (internal only)
+Requirement/
+docs/
+scripts/
