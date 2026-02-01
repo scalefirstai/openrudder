@@ -8,12 +8,10 @@
 [![Java](https://img.shields.io/badge/Java-21+-orange.svg)](https://openjdk.java.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green.svg)](https://spring.io/projects/spring-boot)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.0.0--SNAPSHOT-blue)](https://search.maven.org/artifact/io.openrudder/openrudder-parent)
-[![OpenSSF Best Practices](https://www.bestpractices.coreinfrastructure.org/projects/0000/badge)](https://www.bestpractices.coreinfrastructure.org/projects/0000)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/scalefirstai/openrudder/build.yml?branch=main)](https://github.com/scalefirstai/openrudder/actions)
-[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)](https://github.com/scalefirstai/openrudder)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da)](https://discord.gg/openrudder)
 
-[Website](https://openrudder.io) • [Documentation](https://openrudder.io/docs) • [Quick Start](#-quick-start) • [Examples](./openrudder-examples) • [Contributing](CONTRIBUTING.md)
+[Website](https://openrudder.io) • [Documentation](https://openrudder.io/docs) • [API Reference](https://openrudder.io/api) • [Quick Start](#-quick-start) • [Bug Reports](https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -168,11 +166,13 @@ openai:
 
 ## 📚 Documentation
 
-See the [Requirement](Requirement/) folder for detailed documentation:
+Comprehensive documentation is available:
 
-- [Architecture Guide](Requirement/ARCHITECTURE.md)
-- [Platform Comparison](Requirement/COMPARISON.md)
-- [Feature Overview](Requirement/README.md)
+- **[Getting Started Guide](https://openrudder.io/docs/getting-started)** - Installation and first steps
+- **[API Reference](https://openrudder.io/api)** - Complete API documentation with input/output specifications
+- **[Architecture Guide](https://openrudder.io/docs/architecture)** - System design and components
+- **[User Guide](https://openrudder.io/docs/user-guide)** - Detailed usage instructions
+- **[Examples](./openrudder-examples)** - Working code examples
 
 ## 🧪 Running Examples
 
@@ -263,9 +263,89 @@ public class CustomSource extends AbstractSource<CustomSourceConfig> {
 - **Memory**: ~2GB for 1M active query results
 - **Scaling**: Horizontal via distributed deployment
 
+## 📥 Obtaining the Software
+
+### Maven/Gradle
+
+Add OpenRudder to your project:
+
+**Maven:**
+```xml
+<dependency>
+    <groupId>io.openrudder</groupId>
+    <artifactId>openrudder-spring-boot-starter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+**Gradle:**
+```gradle
+implementation 'io.openrudder:openrudder-spring-boot-starter:1.0.0-SNAPSHOT'
+```
+
+### Source Code
+
+Clone from GitHub:
+```bash
+git clone https://github.com/scalefirstai/openrudder.git
+cd openrudder
+mvn clean install
+```
+
+**Repository:** https://github.com/scalefirstai/openrudder
+
+## 🐛 Bug Reports & Feature Requests
+
+We use GitHub Issues to track bugs and feature requests:
+
+- **Report a Bug:** https://github.com/scalefirstai/openrudder/issues/new?template=bug_report.md
+- **Request a Feature:** https://github.com/scalefirstai/openrudder/issues/new?template=feature_request.md
+- **View All Issues:** https://github.com/scalefirstai/openrudder/issues
+
+When reporting bugs, please include:
+- OpenRudder version
+- Java version
+- Operating system
+- Steps to reproduce
+- Expected vs actual behavior
+- Relevant logs or stack traces
+
+## 💬 Providing Feedback
+
+We welcome your feedback through multiple channels:
+
+- **GitHub Discussions:** https://github.com/scalefirstai/openrudder/discussions
+- **Discord Community:** https://discord.gg/openrudder
+- **Email:** feedback@openrudder.io
+- **Twitter:** [@openrudder](https://twitter.com/openrudder)
+
 ## 🤝 Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions from the community! Please see our [Contributing Guide](CONTRIBUTING.md) for detailed information.
+
+### Quick Contribution Guide
+
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/YOUR_USERNAME/openrudder.git`
+3. **Create a branch:** `git checkout -b feature/my-feature`
+4. **Make changes** following our coding standards
+5. **Test** your changes: `mvn test`
+6. **Commit** with conventional commits: `git commit -m "feat: add new feature"`
+7. **Push** to your fork: `git push origin feature/my-feature`
+8. **Create a Pull Request**
+
+### Contribution Requirements
+
+All contributions must meet these requirements:
+
+- **Code Style:** Follow Java conventions, 4-space indentation, max 120 chars per line
+- **Testing:** Include unit tests with 80%+ coverage
+- **Documentation:** Update relevant docs and add Javadoc for public APIs
+- **Commits:** Use [Conventional Commits](https://www.conventionalcommits.org/) format
+- **License:** Agree to Apache 2.0 license
+- **Code of Conduct:** Follow our [Code of Conduct](CODE_OF_CONDUCT.md)
+
+**Full Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 📄 License
 
