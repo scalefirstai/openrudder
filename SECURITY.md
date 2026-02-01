@@ -20,9 +20,28 @@ The OpenRudder team takes security bugs seriously. We appreciate your efforts to
 
 ### How to Report a Security Vulnerability?
 
-**Please do not report security vulnerabilities through public GitHub issues.**
+**⚠️ IMPORTANT: Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them via email to **security@openrudder.io**. You should receive a response within 48 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
+Security vulnerabilities must be reported privately to protect users. We provide two methods for private reporting:
+
+#### Method 1: Email (Recommended)
+
+**Email**: security@openrudder.io
+
+Send your vulnerability report to this email address. Your report will be:
+- ✅ Kept completely private and confidential
+- ✅ Only shared with the security team
+- ✅ Not disclosed publicly until a fix is available
+
+**Response Time**: You will receive an initial response within **14 days** (typically within 48 hours).
+
+#### Method 2: GitHub Security Advisories (Private)
+
+**URL**: https://github.com/scalefirstai/openrudder/security/advisories/new
+
+Use GitHub's private security advisory feature to report vulnerabilities confidentially. This keeps the report private until we publish a fix.
+
+**Response Time**: You will receive an initial response within **14 days** (typically within 48 hours).
 
 Please include the following information in your report:
 
@@ -39,6 +58,19 @@ This information will help us triage your report more quickly.
 ## Preferred Languages
 
 We prefer all communications to be in English.
+
+## Response Time Commitment
+
+**Initial Response Time**: We commit to providing an initial response to all vulnerability reports within **14 days** of receipt.
+
+- **Target**: Respond within 48 hours
+- **Maximum**: 14 days
+- **Applies to**: All vulnerability reports received in the last 6 months
+- **What counts as response**: Acknowledgment, questions for clarification, or initial assessment
+
+If you do not receive a response within 14 days, please:
+1. Send a follow-up email to security@openrudder.io
+2. Contact us via our [Discord security channel](https://discord.gg/openrudder)
 
 ## Security Update Policy
 

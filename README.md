@@ -351,15 +351,31 @@ The archive is:
 - ✅ Permanently available
 - ✅ Indexed by search engines
 
-## � Security Vulnerabilities
+## 🔒 Security Vulnerabilities
 
-**Do not report security vulnerabilities through public GitHub issues.**
+**⚠️ Do not report security vulnerabilities through public GitHub issues.**
 
-To report a security vulnerability, please see our [Security Policy](SECURITY.md) or email directly to:
-- **Email:** security@openrudder.io
-- **Process:** https://github.com/scalefirstai/openrudder/blob/main/SECURITY.md
+### Vulnerability Reporting Process
 
-We take security seriously and will respond to vulnerability reports within 48 hours.
+**URL**: https://github.com/scalefirstai/openrudder/blob/main/SECURITY.md
+
+We provide two methods for **private** vulnerability reporting:
+
+#### Method 1: Email (Recommended)
+- **Email**: security@openrudder.io
+- **Privacy**: Kept completely confidential until fix is released
+- **Response Time**: Initial response within **14 days** (typically 48 hours)
+
+#### Method 2: GitHub Security Advisories (Private)
+- **URL**: https://github.com/scalefirstai/openrudder/security/advisories/new
+- **Privacy**: Private until we publish a fix
+- **Response Time**: Initial response within **14 days** (typically 48 hours)
+
+### Response Time Commitment
+
+We commit to providing an initial response to all vulnerability reports within **14 days** of receipt (last 6 months).
+
+**Full Security Policy**: [SECURITY.md](SECURITY.md)
 
 ## � Providing Feedback
 
