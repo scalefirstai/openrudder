@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discord Community
+    url: https://discord.gg/openrudder
+    about: Join our Discord community for questions and discussions
+  - name: 📖 Documentation
+    url: https://openrudder.io/docs
+    about: Check our comprehensive documentation
+  - name: 💡 Discussions
+    url: https://github.com/scalefirstai/openrudder/discussions
+    about: Ask questions and share ideas with the community

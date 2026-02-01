@@ -1,0 +1,3 @@
+io.openrudder.reactions.http.HttpWebhookReactionProvider
+io.openrudder.reactions.debug.DebugReactionProvider
+io.openrudder.reactions.kafka.KafkaReactionProvider

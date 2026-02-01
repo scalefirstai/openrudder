@@ -1,0 +1,32 @@
+# This file defines code owners for the OpenRudder project
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Global owners - will be requested for review on all PRs
+* @scalefirstai/openrudder-maintainers
+
+# Core engine
+/openrudder-core/ @scalefirstai/openrudder-core-team
+
+# Query engine
+/openrudder-query-engine/ @scalefirstai/openrudder-query-team
+
+# Data sources
+/openrudder-sources/ @scalefirstai/openrudder-sources-team
+
+# Reactions and AI integration
+/openrudder-reactions/ @scalefirstai/openrudder-ai-team
+
+# Spring Boot integration
+/openrudder-spring-boot-starter/ @scalefirstai/openrudder-spring-team
+
+# Documentation
+*.md @scalefirstai/openrudder-docs-team
+/docs/ @scalefirstai/openrudder-docs-team
+/Requirement/ @scalefirstai/openrudder-docs-team
+
+# CI/CD and GitHub configuration
+/.github/ @scalefirstai/openrudder-devops-team
+
+# Security-related files
+SECURITY.md @scalefirstai/openrudder-security-team
+/scripts/ @scalefirstai/openrudder-devops-team

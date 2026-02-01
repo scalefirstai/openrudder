@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: openrudder-order-monitoring
+
+openrudder:
+  enabled: true
+  auto-start: true
+
+postgres:
+  host: localhost
+  port: 5432
+  database: orders
+  username: postgres
+  password: postgres
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY:demo}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    io.openrudder: DEBUG
+    root: INFO

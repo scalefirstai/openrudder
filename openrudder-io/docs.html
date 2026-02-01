@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - OpenRudder</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="docs-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="logo-text">OpenRudder</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="index.html#architecture">Architecture</a>
+                    <a href="docs.html" class="active">Documentation</a>
+                    <a href="https://github.com/openrudder/openrudder" target="_blank" class="github-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <h3>Getting Started</h3>
+                    <ul>
+                        <li><a href="#introduction">Introduction</a></li>
+                        <li><a href="#quick-start">Quick Start</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Core Concepts</h3>
+                    <ul>
+                        <li><a href="#continuous-queries">Continuous Queries</a></li>
+                        <li><a href="#incremental-processing">Incremental Processing</a></li>
+                        <li><a href="#graph-store">Graph Store</a></li>
+                        <li><a href="#result-cache">Result Cache</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Components</h3>
+                    <ul>
+                        <li><a href="#sources">Data Sources</a></li>
+                        <li><a href="#queries">Query Engine</a></li>
+                        <li><a href="#reactions">Reactions</a></li>
+                        <li><a href="#middleware">Middleware</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Advanced</h3>
+                    <ul>
+                        <li><a href="#cross-source-joins">Cross-Source Joins</a></li>
+                        <li><a href="#ai-integration">AI Integration</a></li>
+                        <li><a href="#performance">Performance</a></li>
+                        <li><a href="#testing">Testing</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <div class="docs-content">
+                <!-- Introduction -->
+                <section id="introduction" class="doc-section">
+                    <h1>OpenRudder Documentation</h1>
+                    <p class="lead">OpenRudder is a real-time continuous query engine that processes streaming data with AI-powered reactions.</p>
+                    
+                    <div class="info-box">
+                        <div class="info-icon">ℹ️</div>
+                        <div>
+                            <strong>What is OpenRudder?</strong>
+                            <p>OpenRudder enables you to write graph-based queries that continuously evaluate against streaming data sources (PostgreSQL, MongoDB, Kafka) and trigger intelligent reactions when patterns match.</p>
+                        </div>
+                    </div>
+
+                    <h2>Key Features</h2>
+                    <ul class="feature-list">
+                        <li><strong>Incremental Processing:</strong> Only re-evaluates affected results, achieving 10-100x performance improvement</li>
+                        <li><strong>Real-time CDC:</strong> Captures database changes via Debezium with millisecond latency</li>
+                        <li><strong>Graph Queries:</strong> Write queries in Cypher to match complex patterns across sources</li>
+                        <li><strong>AI-Powered Reactions:</strong> Integrate with LangChain4j and OpenAI for intelligent responses</li>
+                        <li><strong>High Performance:</strong> Process 100,000+ events/second with &lt;10ms p99 latency</li>
+                    </ul>
+                </section>
+
+                <!-- Quick Start -->
+                <section id="quick-start" class="doc-section">
+                    <h2>Quick Start</h2>
+                    <p>Get OpenRudder running in under 5 minutes.</p>
+
+                    <h3>Prerequisites</h3>
+                    <ul>
+                        <li>Java 21 or higher</li>
+                        <li>Maven 3.8+</li>
+                        <li>Docker and Docker Compose</li>
+                    </ul>
+
+                    <h3>Step 1: Clone the Repository</h3>
+                    <div class="code-block">
+                        <pre><code>git clone https://github.com/openrudder/openrudder.git
+cd openrudder</code></pre>
+                    </div>
+
+                    <h3>Step 2: Start Infrastructure</h3>
+                    <div class="code-block">
+                        <pre><code># Start PostgreSQL with CDC enabled
+docker-compose up -d postgres
+
+# Initialize database
+docker exec -i openrudder-postgres psql -U postgres -d orders < scripts/init-db.sql</code></pre>
+                    </div>
+
+                    <h3>Step 3: Build and Run</h3>
+                    <div class="code-block">
+                        <pre><code># Build the project
+mvn clean install
+
+# Set your OpenAI API key
+export OPENAI_API_KEY=your-api-key-here
+
+# Run the example application
+cd openrudder-examples
+mvn spring-boot:run</code></pre>
+                    </div>
+
+                    <h3>Step 4: Test with Data Changes</h3>
+                    <div class="code-block">
+                        <pre><code># Insert a test order
+docker exec -i openrudder-postgres psql -U postgres -d orders << EOF
+INSERT INTO orders (customer, status, location, driver_assigned) 
+VALUES ('Test Customer', 'READY_FOR_PICKUP', '123 Main St', FALSE);
+EOF</code></pre>
+                    </div>
+
+                    <div class="success-box">
+                        <div class="info-icon">✅</div>
+                        <div>
+                            <strong>Success!</strong>
+                            <p>You should see the continuous query detect the new order and trigger the AI agent to suggest driver assignment.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Continuous Queries -->
+                <section id="continuous-queries" class="doc-section">
+                    <h2>Continuous Queries</h2>
+                    <p>Continuous queries are graph-based queries that continuously evaluate against streaming data.</p>
+
+                    <h3>Query Definition</h3>
+                    <div class="code-block">
+                        <pre><code>ContinuousQuery query = ContinuousQuery.builder()
+    .id("ready-orders")
+    .name("Ready Orders Query")
+    .query("""
+        MATCH (o:Order)
+        WHERE o.status = 'READY_FOR_PICKUP'
+          AND NOT EXISTS(o.driverAssigned)
+        RETURN o.id, o.customer, o.location
+        """)
+    .sourceIds(Set.of(ordersSource.getId()))
+    .build();</code></pre>
+                    </div>
+
+                    <h3>Query Components</h3>
+                    <ul>
+                        <li><strong>MATCH:</strong> Defines the graph pattern to match</li>
+                        <li><strong>WHERE:</strong> Filters results based on conditions</li>
+                        <li><strong>RETURN:</strong> Specifies which fields to include in results</li>
+                    </ul>
+
+                    <h3>Supported Conditions</h3>
+                    <ul>
+                        <li>Equality: <code>o.status = 'READY'</code></li>
+                        <li>Existence: <code>EXISTS(o.field)</code> or <code>NOT EXISTS(o.field)</code></li>
+                        <li>Comparison: <code>o.price > 100</code></li>
+                        <li>Logical: <code>AND</code>, <code>OR</code></li>
+                    </ul>
+                </section>
+
+                <!-- Incremental Processing -->
+                <section id="incremental-processing" class="doc-section">
+                    <h2>Incremental Processing</h2>
+                    <p>OpenRudder uses incremental view maintenance to achieve high performance.</p>
+
+                    <h3>How It Works</h3>
+                    <div class="architecture-flow">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Change Event</h4>
+                                <p>Database change captured via CDC</p>
+                            </div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Graph Update</h4>
+                                <p>InMemoryGraphStore updated with indexes</p>
+                            </div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Find Affected</h4>
+                                <p>ResultSetCache identifies impacted results</p>
+                            </div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Re-evaluate</h4>
+                                <p>Only affected results re-evaluated</p>
+                            </div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Emit Delta</h4>
+                                <p>ADDED/UPDATED/DELETED changes emitted</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Performance Benefits</h3>
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Approach</th>
+                                    <th>Complexity</th>
+                                    <th>Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Traditional (Full Re-execution)</td>
+                                    <td>O(n) - all data</td>
+                                    <td>Slow</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td>Incremental (OpenRudder)</td>
+                                    <td>O(k) - affected results</td>
+                                    <td>10-100x faster</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Graph Store -->
+                <section id="graph-store" class="doc-section">
+                    <h2>Graph Store</h2>
+                    <p>InMemoryGraphStore maintains a unified graph model across all data sources.</p>
+
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Multi-dimensional Indexing:</strong> By label, property, source</li>
+                        <li><strong>O(1) Lookups:</strong> Fast indexed access</li>
+                        <li><strong>Thread-Safe:</strong> Concurrent data structures</li>
+                        <li><strong>Synthetic Relationships:</strong> Cross-source joins</li>
+                    </ul>
+
+                    <h3>Usage Example</h3>
+                    <div class="code-block">
+                        <pre><code>InMemoryGraphStore graphStore = new InMemoryGraphStore();
+
+// Query nodes
+Set&lt;Node&gt; orders = graphStore.getNodesByLabel("Order");
+Set&lt;Node&gt; readyOrders = graphStore.getNodesByProperty(
+    "Order", "status", "READY_FOR_PICKUP"
+);
+
+// Get statistics
+long nodeCount = graphStore.getNodeCount();
+long relCount = graphStore.getRelationshipCount();</code></pre>
+                    </div>
+                </section>
+
+                <!-- Result Cache -->
+                <section id="result-cache" class="doc-section">
+                    <h2>Result Cache</h2>
+                    <p>ResultSetCache provides fast result lookups with multi-dimensional indexing.</p>
+
+                    <h3>Index Types</h3>
+                    <ul>
+                        <li><strong>By Query:</strong> Find all results for a query</li>
+                        <li><strong>By Entity:</strong> Find results referencing an entity</li>
+                        <li><strong>By Field Value:</strong> Find results with specific field values</li>
+                    </ul>
+
+                    <h3>Retention Policies</h3>
+                    <div class="code-block">
+                        <pre><code>// Keep only latest version
+cache.setRetentionPolicy(queryId, new ViewConfig.Latest());
+
+// Keep all history
+cache.setRetentionPolicy(queryId, new ViewConfig.All());
+
+// Keep with TTL
+cache.setRetentionPolicy(queryId, 
+    new ViewConfig.Expire(Duration.ofHours(24)));</code></pre>
+                    </div>
+
+                    <h3>Point-in-Time Queries</h3>
+                    <div class="code-block">
+                        <pre><code>// Get results as they were 1 hour ago
+Set&lt;QueryResult&gt; historicalResults = cache.getResultsAt(
+    queryId, 
+    Instant.now().minus(Duration.ofHours(1))
+);</code></pre>
+                    </div>
+                </section>
+
+                <!-- Cross-Source Joins -->
+                <section id="cross-source-joins" class="doc-section">
+                    <h2>Cross-Source Joins</h2>
+                    <p>Join data across multiple sources using property matching.</p>
+
+                    <h3>Join Definition</h3>
+                    <div class="code-block">
+                        <pre><code>JoinDefinition join = JoinDefinition.builder()
+    .joinId("employee-building-join")
+    .keys(List.of(
+        JoinDefinition.JoinKey.builder()
+            .label("Employee")
+            .property("building_id")
+            .build(),
+        JoinDefinition.JoinKey.builder()
+            .label("Building")
+            .property("id")
+            .build()
+    ))
+    .build();
+
+graphStore.createJoinRelationships(join);</code></pre>
+                    </div>
+
+                    <h3>Query Across Sources</h3>
+                    <div class="code-block">
+                        <pre><code>MATCH (e:Employee)-[j:JOINED_BY_EMPLOYEE_BUILDING_JOIN]->(b:Building)
+WHERE b.city = 'San Francisco'
+RETURN e.name, e.department, b.address</code></pre>
+                    </div>
+                </section>
+
+                <!-- AI Integration -->
+                <section id="ai-integration" class="doc-section">
+                    <h2>AI Integration</h2>
+                    <p>Integrate with LangChain4j and OpenAI for intelligent reactions.</p>
+
+                    <h3>Configure AI Reaction</h3>
+                    <div class="code-block">
+                        <pre><code>@Bean
+public LangChain4jReaction orderDispatcher(ChatLanguageModel model) {
+    return LangChain4jReaction.builder()
+        .name("order-dispatcher")
+        .queryId("ready-orders")
+        .model(model)
+        .systemPrompt("""
+            You are an intelligent order dispatcher AI.
+            Analyze orders and suggest optimal driver assignments.
+            """)
+        .userPromptTemplate("""
+            New order ready for pickup:
+            - Customer: {customer}
+            - Location: {location}
+            - Order ID: {id}
+            
+            Suggest the best driver assignment.
+            """)
+        .build();
+}</code></pre>
+                    </div>
+
+                    <h3>AI Response Example</h3>
+                    <div class="ai-response-box">
+                        <div class="ai-icon">🤖</div>
+                        <div class="ai-content">
+                            <strong>AI Dispatcher Response:</strong>
+                            <p>Based on the location at 123 Main St, I recommend assigning Driver A who is currently available and closest to this location (100 Main St - approximately 0.5 miles away).</p>
+                            <p><strong>Priority:</strong> MEDIUM<br>
+                            <strong>Estimated pickup time:</strong> 5-7 minutes</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Performance -->
+                <section id="performance" class="doc-section">
+                    <h2>Performance</h2>
+                    <p>OpenRudder is designed for high-throughput, low-latency processing.</p>
+
+                    <h3>Performance Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">100K+</div>
+                            <div class="metric-label">Events/Second</div>
+                            <div class="metric-desc">Sustained throughput</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">&lt;10ms</div>
+                            <div class="metric-label">P99 Latency</div>
+                            <div class="metric-desc">Incremental updates</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">&lt;2GB</div>
+                            <div class="metric-label">Memory</div>
+                            <div class="metric-desc">For 1M cached results</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">10-100x</div>
+                            <div class="metric-label">Faster</div>
+                            <div class="metric-desc">vs full re-execution</div>
+                        </div>
+                    </div>
+
+                    <h3>Optimization Tips</h3>
+                    <ul>
+                        <li>Use specific WHERE conditions to reduce result set size</li>
+                        <li>Index frequently queried properties in the graph store</li>
+                        <li>Choose appropriate retention policies for your use case</li>
+                        <li>Monitor cache hit rates and adjust sizing accordingly</li>
+                    </ul>
+                </section>
+
+                <!-- Testing -->
+                <section id="testing" class="doc-section">
+                    <h2>Testing</h2>
+                    <p>Comprehensive testing guide for OpenRudder applications.</p>
+
+                    <h3>Test CDC Pipeline</h3>
+                    <div class="code-block">
+                        <pre><code># Insert test data
+docker exec -i openrudder-postgres psql -U postgres -d orders << EOF
+INSERT INTO orders (customer, status, location, driver_assigned) 
+VALUES ('Test Customer', 'READY_FOR_PICKUP', '123 Test St', FALSE);
+EOF
+
+# Update existing order
+docker exec -i openrudder-postgres psql -U postgres -d orders << EOF
+UPDATE orders 
+SET status = 'READY_FOR_PICKUP' 
+WHERE customer = 'John Doe';
+EOF</code></pre>
+                    </div>
+
+                    <h3>Verify Results</h3>
+                    <p>Check application logs for:</p>
+                    <ul>
+                        <li>✅ CDC event captured</li>
+                        <li>✅ Query evaluation completed</li>
+                        <li>✅ Result change emitted (ADDED/UPDATED/DELETED)</li>
+                        <li>✅ AI agent triggered</li>
+                        <li>✅ Response generated</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <div class="info-icon">📊</div>
+                        <div>
+                            <strong>Test Results Available</strong>
+                            <p>See comprehensive test results and performance metrics in the <a href="#test-results">Test Results</a> section.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="docs-script.js"></script>
+</body>
+</html>

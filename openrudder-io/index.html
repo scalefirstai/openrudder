@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenRudder - Real-time Continuous Query Engine with AI-powered reactions for streaming data">
+    <meta property="og:title" content="OpenRudder - Continuous Query Engine">
+    <meta property="og:description" content="Real-time streaming data processing with AI-powered reactions">
+    <meta property="og:type" content="website">
+    <title>OpenRudder - Continuous Query Engine</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="logo-text">OpenRudder</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#architecture">Architecture</a>
+                    <a href="docs.html">Documentation</a>
+                    <a href="#getting-started">Get Started</a>
+                    <a href="https://github.com/openrudder/openrudder" target="_blank" class="github-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">⚡</span>
+                    <span>Real-time Continuous Queries</span>
+                </div>
+                <h1 class="hero-title">
+                    Stream Processing with
+                    <span class="gradient-text">AI Superpowers</span>
+                </h1>
+                <p class="hero-description">
+                    OpenRudder is a continuous query engine that processes streaming data in real-time,
+                    evaluates graph-based queries incrementally, and triggers AI-powered reactions.
+                    Built for modern event-driven architectures.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#getting-started" class="btn btn-primary">
+                        Get Started
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="docs.html" class="btn btn-secondary">
+                        View Documentation
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">100K+</div>
+                        <div class="stat-label">Events/Second</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">&lt;10ms</div>
+                        <div class="stat-label">P99 Latency</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Real-time</div>
+                        <div class="stat-label">CDC Processing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-description">
+                    Everything you need for real-time data processing and intelligent reactions
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Incremental Processing</h3>
+                    <p>Process only affected results, not entire datasets. 10-100x faster than traditional query re-execution.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Real-time CDC</h3>
+                    <p>Capture database changes via Debezium CDC. Support for PostgreSQL, MongoDB, MySQL, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke-width="2"/>
+                            <polyline points="7.5 4.21 12 6.81 16.5 4.21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="7.5 19.79 7.5 14.6 3 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="21 12 16.5 14.6 16.5 19.79" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Graph Queries</h3>
+                    <p>Write queries in Cypher. Match patterns across multiple sources with cross-source joins.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Multi-dimensional Cache</h3>
+                    <p>Fast result lookups with indexes by query, entity, and field value. Point-in-time queries supported.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>AI-Powered Reactions</h3>
+                    <p>Integrate with LangChain4j and OpenAI. Trigger intelligent actions based on query results.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>High Performance</h3>
+                    <p>Process 100,000+ events per second with &lt;10ms p99 latency. Built on Project Reactor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="architecture">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Architecture</h2>
+                <p class="section-description">
+                    Modern event-driven architecture with incremental view maintenance
+                </p>
+            </div>
+            <div class="architecture-diagram">
+                <div class="arch-flow">
+                    <div class="arch-step">
+                        <div class="arch-icon">📊</div>
+                        <h4>Data Sources</h4>
+                        <p>PostgreSQL, MongoDB, Kafka</p>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-icon">🔄</div>
+                        <h4>CDC Capture</h4>
+                        <p>Debezium Streaming</p>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-icon">⚡</div>
+                        <h4>Query Engine</h4>
+                        <p>Incremental Processing</p>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-step">
+                        <div class="arch-icon">🤖</div>
+                        <h4>AI Reactions</h4>
+                        <p>LangChain4j + OpenAI</p>
+                    </div>
+                </div>
+                <div class="arch-components">
+                    <div class="component">
+                        <h4>InMemoryGraphStore</h4>
+                        <p>Unified graph model with multi-dimensional indexing for fast pattern matching</p>
+                    </div>
+                    <div class="component">
+                        <h4>ResultSetCache</h4>
+                        <p>Cached results with indexes by entity, field value, and query membership</p>
+                    </div>
+                    <div class="component">
+                        <h4>IncrementalUpdateProcessor</h4>
+                        <p>Computes precise deltas (ADDED/UPDATED/DELETED) without full re-execution</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section id="getting-started" class="getting-started">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get Started in Minutes</h2>
+                <p class="section-description">
+                    Quick setup with Docker Compose and Spring Boot
+                </p>
+            </div>
+            <div class="code-example">
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="docker">Docker Compose</button>
+                    <button class="code-tab" data-tab="maven">Maven Build</button>
+                    <button class="code-tab" data-tab="query">Define Query</button>
+                </div>
+                <div class="code-content">
+                    <pre class="code-block active" data-content="docker"><code># Start PostgreSQL with CDC enabled
+docker-compose up -d postgres
+
+# Initialize database
+docker exec -i openrudder-postgres psql -U postgres -d orders &lt; scripts/init-db.sql</code></pre>
+                    <pre class="code-block" data-content="maven"><code># Build the project
+mvn clean install
+
+# Run the example application
+cd openrudder-examples
+export OPENAI_API_KEY=your-key
+mvn spring-boot:run</code></pre>
+                    <pre class="code-block" data-content="query"><code>// Define a continuous query
+ContinuousQuery query = ContinuousQuery.builder()
+    .id("ready-orders")
+    .query("""
+        MATCH (o:Order)
+        WHERE o.status = 'READY_FOR_PICKUP'
+          AND NOT EXISTS(o.driverAssigned)
+        RETURN o.id, o.customer, o.location
+        """)
+    .sourceIds(Set.of(ordersSource.getId()))
+    .build();</code></pre>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a href="docs.html" class="btn btn-primary">Full Documentation</a>
+                <a href="https://github.com/openrudder/openrudder" target="_blank" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="logo-text">OpenRudder</span>
+                    </div>
+                    <p class="footer-description">Real-time continuous query engine with AI-powered reactions</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="docs.html#getting-started">Getting Started</a></li>
+                        <li><a href="docs.html#architecture">Architecture</a></li>
+                        <li><a href="docs.html#incremental-processing">Incremental Processing</a></li>
+                        <li><a href="docs.html#test-results">Test Results</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/openrudder/openrudder">GitHub</a></li>
+                        <li><a href="docs.html#examples">Examples</a></li>
+                        <li><a href="docs.html#api">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/openrudder/openrudder/issues">Issues</a></li>
+                        <li><a href="https://github.com/openrudder/openrudder/discussions">Discussions</a></li>
+                        <li><a href="https://github.com/openrudder/openrudder/blob/main/CONTRIBUTING.md">Contributing</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 OpenRudder. Open Source under Apache 2.0 License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
