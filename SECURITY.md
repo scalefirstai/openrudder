@@ -1,5 +1,10 @@
 # Security Policy
 
+**Reporting URL:** https://github.com/scalefirstai/openrudder/blob/main/SECURITY.md  
+**Contact Email:** security@openrudder.io
+
+OpenRudder takes security seriously. This document describes our security policy and how to report vulnerabilities.
+
 ## Supported Versions
 
 We release patches for security vulnerabilities. Which versions are eligible for receiving such patches depends on the CVSS v3.0 Rating:

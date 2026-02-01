@@ -310,7 +310,17 @@ When reporting bugs, please include:
 - Expected vs actual behavior
 - Relevant logs or stack traces
 
-## 💬 Providing Feedback
+## � Security Vulnerabilities
+
+**Do not report security vulnerabilities through public GitHub issues.**
+
+To report a security vulnerability, please see our [Security Policy](SECURITY.md) or email directly to:
+- **Email:** security@openrudder.io
+- **Process:** https://github.com/scalefirstai/openrudder/blob/main/SECURITY.md
+
+We take security seriously and will respond to vulnerability reports within 48 hours.
+
+## � Providing Feedback
 
 We welcome your feedback through multiple channels:
 
@@ -346,6 +356,37 @@ All contributions must meet these requirements:
 - **Code of Conduct:** Follow our [Code of Conduct](CODE_OF_CONDUCT.md)
 
 **Full Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## 📦 Releases & Versioning
+
+OpenRudder follows [Semantic Versioning](https://semver.org/) (SemVer):
+
+- **Current Version:** 1.0.0-SNAPSHOT (Development)
+- **Release History:** https://github.com/scalefirstai/openrudder/releases
+- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+
+### Version Identifiers
+
+Each release has a unique version identifier:
+- Format: `MAJOR.MINOR.PATCH` (e.g., 1.0.0)
+- Development snapshots: `MAJOR.MINOR.PATCH-SNAPSHOT` (e.g., 1.0.0-SNAPSHOT)
+- Release candidates: `MAJOR.MINOR.PATCH-RC.N` (e.g., 1.0.0-RC.1)
+
+### Accessing Releases
+
+- **Latest Stable:** https://github.com/scalefirstai/openrudder/releases/latest
+- **All Releases:** https://github.com/scalefirstai/openrudder/releases
+- **Maven Central:** https://search.maven.org/artifact/io.openrudder/openrudder-parent
+
+### Source Repository
+
+The source repository includes:
+- ✅ All interim versions and commits for collaborative review
+- ✅ Development branches for feature work
+- ✅ Tagged releases for production use
+- ✅ Pull requests for community review
+
+**Repository:** https://github.com/scalefirstai/openrudder
 
 ## 📄 License
 
