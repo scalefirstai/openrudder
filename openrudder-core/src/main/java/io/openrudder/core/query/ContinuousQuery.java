@@ -3,17 +3,18 @@ package io.openrudder.core.query;
 import io.openrudder.core.model.ChangeEvent;
 import lombok.Builder;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
 @Value
 @Builder
 public class ContinuousQuery {
+    private static final Logger log = LoggerFactory.getLogger(ContinuousQuery.class);
     String id;
     String name;
     String query;

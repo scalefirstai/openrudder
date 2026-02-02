@@ -1,0 +1,102 @@
+version: "1.0"
+
+sources:
+  - id: orders-db
+    name: orders-source
+    type: postgres
+    enabled: true
+    postgres:
+      host: localhost
+      port: 5432
+      database: orders
+      username: postgres
+      password: postgres
+      schema: public
+      tables:
+        - orders
+      cdcEnabled: true
+
+  - id: inventory-db
+    name: inventory-source
+    type: postgres
+    enabled: true
+    postgres:
+      host: localhost
+      port: 5432
+      database: inventory
+      username: postgres
+      password: postgres
+      schema: public
+      tables:
+        - products
+        - stock_levels
+      cdcEnabled: true
+
+  - id: events-stream
+    name: events-kafka
+    type: kafka
+    enabled: true
+    kafka:
+      bootstrapServers: localhost:9092
+      topics:
+        - order-events
+        - inventory-events
+      groupId: openrudder-consumer
+      keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+      valueDeserializer: org.apache.kafka.common.serialization.JsonDeserializer
+
+queries:
+  - id: low-stock-orders
+    name: Orders with Low Stock Items
+    query: |
+      MATCH (o:Order)-[:CONTAINS]->(i:Item)
+      MATCH (p:Product {id: i.productId})
+      WHERE p.stockLevel < 10
+      RETURN o.id, o.customer, i.productId, p.stockLevel
+    sourceIds:
+      - orders-source
+      - inventory-source
+
+  - id: high-priority-orders
+    name: High Priority Orders
+    query: |
+      MATCH (o:Order)
+      WHERE o.priority = 'HIGH'
+        AND o.status = 'PENDING'
+      RETURN o.id, o.customer, o.priority, o.createdAt
+    sourceIds:
+      - orders-source
+
+reactions:
+  - id: low-stock-alert
+    name: Low Stock Alert Webhook
+    type: webhook
+    enabled: true
+    queryIds:
+      - low-stock-orders
+    webhook:
+      url: http://localhost:8080/api/alerts/low-stock
+      method: POST
+      headers:
+        Content-Type: application/json
+      bodyTemplate: |
+        {
+          "alertType": "LOW_STOCK",
+          "orderId": "{id}",
+          "customer": "{customer}",
+          "productId": "{productId}",
+          "stockLevel": {stockLevel}
+        }
+      timeoutMs: 3000
+
+  - id: priority-order-notifier
+    name: Priority Order Kafka Publisher
+    type: kafka
+    enabled: true
+    queryIds:
+      - high-priority-orders
+    kafka:
+      bootstrapServers: localhost:9092
+      topic: priority-orders
+      keySerializer: org.apache.kafka.common.serialization.StringSerializer
+      valueSerializer: org.apache.kafka.common.serialization.JsonSerializer

@@ -1,7 +1,8 @@
 package io.openrudder.core.source;
 
 import io.openrudder.core.model.ChangeEvent;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
@@ -9,9 +10,9 @@ import reactor.core.publisher.Sinks;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Slf4j
 public abstract class AbstractSource<C extends SourceConfig> implements Source<C> {
     
+    private static final Logger log = LoggerFactory.getLogger(AbstractSource.class);
     protected final String id;
     protected final String name;
     protected final C config;

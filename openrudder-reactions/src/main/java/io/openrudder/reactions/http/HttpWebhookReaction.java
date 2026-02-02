@@ -87,11 +87,12 @@ public class HttpWebhookReaction extends AbstractReaction {
             QueryResult result, 
             String queryId, 
             String changeType) {
+        Instant timestamp = result.getTimestamp() != null ? result.getTimestamp() : Instant.now();
         return Map.of(
             "queryId", queryId,
             "changeType", changeType,
             "result", result.data(),
-            "timestamp", result.getTimestamp() != null ? result.getTimestamp() : Instant.now()
+            "timestamp", timestamp.toString()
         );
     }
     
@@ -99,12 +100,13 @@ public class HttpWebhookReaction extends AbstractReaction {
             QueryResult before,
             QueryResult after,
             String queryId) {
+        Instant timestamp = after.getTimestamp() != null ? after.getTimestamp() : Instant.now();
         return Map.of(
             "queryId", queryId,
             "changeType", "updated",
             "before", before.data(),
             "after", after.data(),
-            "timestamp", after.getTimestamp() != null ? after.getTimestamp() : Instant.now()
+            "timestamp", timestamp.toString()
         );
     }
 }

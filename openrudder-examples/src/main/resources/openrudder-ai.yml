@@ -1,0 +1,62 @@
+version: "1.0"
+
+sources:
+  - id: orders-db
+    name: orders-source
+    type: postgres
+    enabled: true
+    postgres:
+      host: ${POSTGRES_HOST:localhost}
+      port: ${POSTGRES_PORT:5432}
+      database: ${POSTGRES_DB:orders}
+      username: ${POSTGRES_USER:postgres}
+      password: ${POSTGRES_PASSWORD:postgres}
+      schema: public
+      tables:
+        - orders
+      cdcEnabled: true
+
+queries:
+  - id: ready-orders
+    name: Ready Orders Query
+    query: |
+      MATCH (o:Order)
+      WHERE o.status = 'READY_FOR_PICKUP'
+        AND NOT EXISTS(o.driverAssigned)
+      RETURN o.id, o.customer, o.location, o.priority
+    sourceIds:
+      - orders-source
+
+reactions:
+  - id: ai-dispatcher
+    name: AI Order Dispatcher
+    type: ai
+    enabled: true
+    queryIds:
+      - ready-orders
+    ai:
+      provider: openai
+      model: gpt-3.5-turbo
+      apiKey: ${OPENAI_API_KEY}
+      temperature: 0.7
+      maxTokens: 1000
+      systemPrompt: |
+        You are an intelligent order dispatcher AI.
+        Your job is to analyze new orders and determine the best driver assignment strategy.
+        Consider factors like location, driver availability, and order priority.
+      userPromptTemplate: |
+        New order ready for pickup:
+        Order ID: {id}
+        Customer: {customer}
+        Location: {location}
+        Priority: {priority}
+        
+        Analyze this order and suggest the optimal driver assignment.
+    execution:
+      mode: ASYNC
+      maxConcurrency: 3
+    retry:
+      enabled: true
+      maxAttempts: 2
+      initialBackoffMs: 500
+      maxBackoffMs: 10000

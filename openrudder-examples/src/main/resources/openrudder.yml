@@ -1,0 +1,68 @@
+version: "1.0"
+
+sources:
+  - id: orders-db
+    name: orders-source
+    type: postgres
+    enabled: true
+    postgres:
+      host: localhost
+      port: 5432
+      database: orders
+      username: postgres
+      password: postgres
+      schema: public
+      tables:
+        - orders
+      cdcEnabled: true
+      slotName: openrudder_orders_slot
+      publicationName: openrudder_publication
+
+queries:
+  - id: ready-orders
+    name: Ready Orders Query
+    query: |
+      MATCH (o:Order)
+      WHERE o.status = 'READY_FOR_PICKUP'
+        AND NOT EXISTS(o.driverAssigned)
+      RETURN o.id, o.customer, o.location
+    sourceIds:
+      - orders-source
+    options:
+      enableIncremental: true
+      maxResultSetSize: 1000
+      resultTtlSeconds: 3600
+
+reactions:
+  - id: order-dispatcher-webhook
+    name: order-dispatcher
+    type: webhook
+    enabled: true
+    queryIds:
+      - ready-orders
+    webhook:
+      url: http://localhost:8080/api/dispatch
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: Bearer ${DISPATCHER_API_KEY}
+      bodyTemplate: |
+        {
+          "orderId": "{id}",
+          "customer": "{customer}",
+          "location": "{location}",
+          "timestamp": "{timestamp}"
+        }
+      timeoutMs: 5000
+    execution:
+      mode: ASYNC
+      batchSize: 10
+      batchWindowMs: 1000
+      throttleRateMs: 100
+      maxConcurrency: 5
+    retry:
+      enabled: true
+      maxAttempts: 3
+      initialBackoffMs: 1000
+      maxBackoffMs: 30000
+      backoffMultiplier: 2.0

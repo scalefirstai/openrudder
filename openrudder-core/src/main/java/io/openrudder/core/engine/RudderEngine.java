@@ -8,7 +8,8 @@ import io.openrudder.core.reaction.Reaction;
 import io.openrudder.core.source.Source;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -18,9 +19,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Slf4j
 @Getter
 public class RudderEngine {
+    
+    private static final Logger log = LoggerFactory.getLogger(RudderEngine.class);
     
     private final List<Source<?>> sources;
     private final List<ContinuousQuery> queries;

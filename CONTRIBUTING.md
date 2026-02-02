@@ -60,9 +60,17 @@ mvn clean install
 
 ### Running Tests
 
+OpenRudder uses a comprehensive automated test suite built with FLOSS tools. All tests must pass before submitting a PR.
+
 ```bash
 # Run all tests
 mvn test
+
+# Run tests with coverage report
+mvn clean test jacoco:report
+
+# View coverage report in browser
+open openrudder-core/target/site/jacoco/index.html
 
 # Run integration tests
 mvn verify
@@ -74,9 +82,32 @@ mvn test
 # Run specific test class
 mvn test -Dtest=RudderEngineTest
 
-# Run with coverage
-mvn clean test jacoco:report
+# Run specific test method
+mvn test -Dtest=ChangeEventTest#shouldCreateInsertEvent
 ```
+
+**📖 Complete Testing Guide**: See [BUILD.md](BUILD.md) for detailed testing instructions, coverage requirements, and troubleshooting.
+
+### Test Suite Requirements
+
+All contributions must include appropriate tests:
+
+- **Unit Tests**: Test individual classes and methods in isolation
+- **Integration Tests**: Test component interactions (when applicable)
+- **Coverage**: Maintain 80%+ line coverage for new code
+- **Naming**: Use descriptive test names (e.g., `shouldProcessOrderSuccessfully`)
+- **Structure**: Follow Given-When-Then pattern
+
+### Continuous Integration
+
+Every push and PR automatically runs:
+- ✅ Full build on Ubuntu with Java 21
+- ✅ All unit tests with coverage reporting
+- ✅ Integration tests (when available)
+- ✅ Code quality checks
+- ✅ Test result publishing
+
+View CI results: https://github.com/scalefirstai/openrudder/actions
 
 ### Running Examples
 
@@ -85,7 +116,34 @@ cd openrudder-examples
 mvn spring-boot:run
 ```
 
-## 📋 Code Style Guidelines
+## 📋 Code Quality and Style Guidelines
+
+### Code Quality Policy
+
+**OpenRudder enforces strict code quality standards using compiler warnings and linter tools.**
+
+📖 **Full Policy**: [CODE_QUALITY.md](CODE_QUALITY.md)
+
+#### Requirements
+
+All contributions MUST:
+- ✅ Compile without warnings (all warnings enabled)
+- ✅ Pass Checkstyle checks (Google Java Style)
+- ✅ Pass PMD analysis (bug detection)
+- ✅ Pass SpotBugs analysis (static analysis)
+- ✅ Address all code quality issues
+
+#### Quick Check
+
+```bash
+# Run all quality checks before submitting PR
+mvn clean verify
+
+# Or check individually
+mvn checkstyle:check pmd:check spotbugs:check
+```
+
+### Code Style Guidelines
 
 We follow standard Java conventions with some specific preferences:
 
@@ -141,9 +199,31 @@ public Mono<Order> processOrder(String orderId) {
 
 ## 🧪 Testing Guidelines
 
+### Test Policy
+
+**OpenRudder has a formal test policy: As major new functionality is added, tests MUST be added to the automated test suite.**
+
+📖 **Full Policy**: [TEST_POLICY.md](TEST_POLICY.md)
+
+#### Key Requirements
+
+- **New Features**: Must include unit + integration tests with 80%+ coverage
+- **Bug Fixes**: Must include test reproducing the bug
+- **All PRs**: Must pass all existing tests
+- **Coverage**: Minimum 60% overall, 80% target for new code
+
+#### What Requires Tests
+
+Major new functionality includes:
+- New modules or components
+- New public APIs or interfaces
+- New data sources or integrations
+- New query capabilities
+- Significant algorithm changes
+
 ### Test Coverage
 
-- Maintain minimum 80% code coverage
+- Maintain minimum 80% code coverage for new code
 - Write unit tests for all business logic
 - Add integration tests for complex workflows
 - Include edge cases and error scenarios

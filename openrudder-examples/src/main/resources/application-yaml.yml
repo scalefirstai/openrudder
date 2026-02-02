@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: openrudder-yaml-example
+
+openrudder:
+  config:
+    yaml:
+      enabled: true
+      path: classpath:openrudder.yml
+
+logging:
+  level:
+    io.openrudder: DEBUG
+    root: INFO

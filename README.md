@@ -42,7 +42,7 @@ Add to your `pom.xml`:
 </dependency>
 ```
 
-### Basic Example
+### Basic Example (Java Configuration)
 
 ```java
 @SpringBootApplication
@@ -95,6 +95,53 @@ public class MyApplication {
     }
 }
 ```
+
+### YAML Configuration (New!)
+
+Configure sources, queries, and reactions declaratively with YAML:
+
+**application.yml:**
+```yaml
+openrudder:
+  config:
+    yaml:
+      enabled: true
+      path: classpath:openrudder.yml
+```
+
+**openrudder.yml:**
+```yaml
+version: "1.0"
+
+sources:
+  - name: orders-source
+    type: postgres
+    postgres:
+      host: localhost
+      database: mydb
+      username: user
+      password: ${POSTGRES_PASSWORD}
+      tables: [orders]
+      cdcEnabled: true
+
+queries:
+  - id: ready-orders
+    query: |
+      MATCH (o:Order)
+      WHERE o.status = 'READY'
+      RETURN o
+    sourceIds: [orders-source]
+
+reactions:
+  - name: order-processor
+    type: webhook
+    queryIds: [ready-orders]
+    webhook:
+      url: http://localhost:8080/api/process
+      method: POST
+```
+
+See [YAML Configuration Guide](YAML_CONFIGURATION.md) for complete documentation.
 
 ## 📦 Project Structure
 
@@ -201,9 +248,46 @@ mvn clean install
 # Run tests
 mvn test
 
+# Run tests with coverage
+mvn clean test jacoco:report
+
 # Skip tests for faster build
 mvn clean install -DskipTests
 ```
+
+**📖 For detailed build and testing instructions, see [BUILD.md](BUILD.md)**
+
+### Running the Test Suite
+
+OpenRudder includes a comprehensive automated test suite using FLOSS tools (JUnit 5, Mockito, Reactor Test):
+
+```bash
+# Run all tests
+mvn test
+
+# Run tests with coverage report
+mvn clean test jacoco:report
+
+# View coverage report (opens in browser)
+open openrudder-core/target/site/jacoco/index.html
+
+# Run integration tests
+mvn verify
+```
+
+**Test Suite Documentation**: See [BUILD.md](BUILD.md) for complete testing instructions, coverage requirements, and CI/CD details.
+
+### Test Policy
+
+OpenRudder has a **formal test policy**: As major new functionality is added, tests MUST be added to the automated test suite.
+
+📖 **Test Policy**: [TEST_POLICY.md](TEST_POLICY.md)  
+📖 **Code Quality Policy**: [CODE_QUALITY.md](CODE_QUALITY.md)
+
+All code must:
+- ✅ Include tests for new functionality (80%+ coverage)
+- ✅ Compile without warnings
+- ✅ Pass all linter checks (Checkstyle, PMD, SpotBugs)
 
 ## 🛠️ Development
 

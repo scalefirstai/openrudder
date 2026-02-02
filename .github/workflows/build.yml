@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,9 +29,75 @@ jobs:
         cache: maven
         
     - name: Build with Maven
-      run: mvn clean install -DskipTests -Dmaven.compiler.failOnError=false
+      run: mvn clean install -DskipTests
+      
+    - name: Run code quality checks
+      run: mvn checkstyle:check
       continue-on-error: true
       
-    - name: Run tests
-      run: mvn test
+    - name: Run tests with coverage
+      run: mvn test jacoco:report
+      
+    - name: Run integration tests
+      run: mvn verify -DskipUnitTests
       continue-on-error: true
+      
+    - name: Run PMD analysis
+      run: mvn pmd:check
+      continue-on-error: true
+      
+    - name: Run SpotBugs analysis
+      run: mvn spotbugs:check
+      continue-on-error: true
+      
+    - name: Generate coverage report
+      run: mvn jacoco:report-aggregate
+      continue-on-error: true
+      
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./target/site/jacoco/jacoco.xml,./openrudder-core/target/site/jacoco/jacoco.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+      continue-on-error: true
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: |
+          **/target/surefire-reports/*.xml
+          **/target/failsafe-reports/*.xml
+        retention-days: 30
+        
+    - name: Upload coverage reports as artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: coverage-reports
+        path: |
+          **/target/site/jacoco/
+        retention-days: 30
+        
+    - name: Upload code quality reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: code-quality-reports
+        path: |
+          **/target/checkstyle-result.xml
+          **/target/pmd.xml
+          **/target/spotbugsXml.xml
+        retention-days: 30
+        
+    - name: Publish test report
+      uses: mikepenz/action-junit-report@v4
+      if: always()
+      with:
+        report_paths: '**/target/surefire-reports/TEST-*.xml'
+        check_name: Test Results
+        fail_on_failure: true
+        require_tests: true

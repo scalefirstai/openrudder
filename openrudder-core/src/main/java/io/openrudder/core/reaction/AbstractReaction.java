@@ -2,7 +2,8 @@ package io.openrudder.core.reaction;
 
 import io.openrudder.core.query.QueryResult;
 import io.openrudder.core.query.ResultChange;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -12,9 +13,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Slf4j
 public abstract class AbstractReaction implements Reaction {
     
+    protected static final Logger log = LoggerFactory.getLogger(AbstractReaction.class);
     protected final ReactionConfig config;
     protected final AtomicLong totalProcessed = new AtomicLong(0);
     protected final AtomicLong totalErrors = new AtomicLong(0);
