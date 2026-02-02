@@ -188,10 +188,14 @@ class InMemoryResultSetCacheTest {
     }
 
     private QueryResult createTestResultWithField(String id, String queryId, String fieldName, Object fieldValue) {
+        Map<String, Object> data = fieldName.equals("id") 
+            ? Map.of("id", fieldValue)
+            : Map.of("id", id, fieldName, fieldValue);
+        
         return QueryResult.builder()
             .id(id)
             .queryId(queryId)
-            .data(Map.of("id", id, fieldName, fieldValue))
+            .data(data)
             .timestamp(Instant.now())
             .build();
     }
