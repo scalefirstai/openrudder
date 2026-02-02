@@ -27,7 +27,7 @@
         <neo4j.version>5.15.0</neo4j.version>
         <debezium.version>2.5.0.Final</debezium.version>
         <micrometer.version>1.12.1</micrometer.version>
-        <lombok.version>1.18.36</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <slf4j.version>2.0.9</slf4j.version>
         <jacoco.version>0.8.11</jacoco.version>
         <junit.version>5.10.1</junit.version>
