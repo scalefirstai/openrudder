@@ -1,0 +1,340 @@
+name: Claude Continuous Refactoring
+
+on:
+  # Trigger on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - 'openrudder-*/**/*.java'
+      - 'pom.xml'
+      - '**/pom.xml'
+  
+  # Trigger on pull request
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'openrudder-*/**/*.java'
+      - 'pom.xml'
+      - '**/pom.xml'
+  
+  # Allow manual trigger with optional focus area
+  workflow_dispatch:
+    inputs:
+      module:
+        description: 'Module to refactor (leave empty for all)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - openrudder-core
+          - openrudder-sources
+          - openrudder-query-engine
+          - openrudder-reactions
+          - openrudder-spring-boot-starter
+      refactor_type:
+        description: 'Type of refactoring'
+        required: true
+        type: choice
+        default: 'code_quality'
+        options:
+          - code_quality
+          - performance
+          - security
+          - architecture
+          - documentation
+          - comprehensive
+
+jobs:
+  analyze-and-refactor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Build project
+        run: |
+          mvn clean install -DskipTests
+          echo "Build completed successfully"
+      
+      - name: Run static analysis
+        id: analysis
+        run: |
+          # Run PMD for code quality
+          mvn pmd:pmd pmd:cpd || true
+          
+          # Run SpotBugs for bug detection
+          mvn spotbugs:spotbugs || true
+          
+          # Run Checkstyle
+          mvn checkstyle:checkstyle || true
+          
+          # Collect results
+          echo "analysis_complete=true" >> $GITHUB_OUTPUT
+      
+      - name: Collect code metrics
+        id: metrics
+        run: |
+          # Count files and lines
+          JAVA_FILES=$(find . -name "*.java" | wc -l)
+          TOTAL_LINES=$(find . -name "*.java" -exec wc -l {} + | tail -1 | awk '{print $1}')
+          
+          # Find complex classes (>300 lines)
+          COMPLEX_CLASSES=$(find . -name "*.java" -exec wc -l {} + | awk '$1 > 300 {print $2}' | wc -l)
+          
+          echo "java_files=$JAVA_FILES" >> $GITHUB_OUTPUT
+          echo "total_lines=$TOTAL_LINES" >> $GITHUB_OUTPUT
+          echo "complex_classes=$COMPLEX_CLASSES" >> $GITHUB_OUTPUT
+          
+          # Save file list for Claude
+          find . -name "*.java" > /tmp/java_files.txt
+      
+      - name: Prepare context for Claude
+        id: prepare
+        run: |
+          # Determine focus module
+          MODULE="${{ github.event.inputs.module }}"
+          if [ -z "$MODULE" ]; then
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              # Focus on changed files in PR
+              git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep "\.java$" > /tmp/changed_files.txt || true
+            else
+              # Focus on recent changes in push
+              git diff --name-only HEAD~1 HEAD | grep "\.java$" > /tmp/changed_files.txt || true
+            fi
+          else
+            # Focus on specific module
+            find "./$MODULE" -name "*.java" > /tmp/changed_files.txt
+          fi
+          
+          # Create analysis summary
+          cat > /tmp/refactor_context.md << 'EOF'
+          # OpenRudder Refactoring Context
+          
+          ## Project Overview
+          - **Project**: OpenRudder - Event-Driven AI Agent Platform
+          - **Language**: Java 21
+          - **Framework**: Spring Boot 3.2
+          - **Architecture**: Reactive (Project Reactor), CDC-based
+          
+          ## Modules
+          1. **openrudder-core**: Core domain models and interfaces
+          2. **openrudder-sources**: Data source implementations (CDC, Kafka, MongoDB)
+          3. **openrudder-query-engine**: Continuous query engine
+          4. **openrudder-reactions**: Reaction implementations (AI agents, webhooks)
+          5. **openrudder-spring-boot-starter**: Auto-configuration
+          
+          ## Code Metrics
+          - Java Files: ${{ steps.metrics.outputs.java_files }}
+          - Total Lines: ${{ steps.metrics.outputs.total_lines }}
+          - Complex Classes (>300 lines): ${{ steps.metrics.outputs.complex_classes }}
+          
+          ## Refactoring Focus
+          - Type: ${{ github.event.inputs.refactor_type || 'code_quality' }}
+          - Trigger: ${{ github.event_name }}
+          
+          ## Key Quality Goals
+          1. Maintain reactive patterns (Mono/Flux)
+          2. Follow Spring Boot best practices
+          3. Ensure thread-safety in concurrent scenarios
+          4. Improve error handling and logging
+          5. Enhance documentation and JavaDoc
+          6. Reduce code duplication
+          7. Improve test coverage
+          EOF
+          
+          echo "context_ready=true" >> $GITHUB_OUTPUT
+      
+      - name: Call Claude API for refactoring suggestions
+        id: claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Read changed files (limit to first 20 for API constraints)
+          CHANGED_FILES=$(head -20 /tmp/changed_files.txt 2>/dev/null || echo "")
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No Java files to analyze"
+            echo "has_suggestions=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Prepare file contents for Claude
+          FILE_CONTENTS=""
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              FILE_CONTENTS="$FILE_CONTENTS\n\n## File: $file\n\`\`\`java\n$(cat "$file")\n\`\`\`"
+            fi
+          done < <(echo "$CHANGED_FILES")
+          
+          # Create Claude API request
+          cat > /tmp/claude_request.json << EOF
+          {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 16000,
+            "messages": [
+              {
+                "role": "user",
+                "content": "$(cat /tmp/refactor_context.md)\n\n# Files to Analyze\n$FILE_CONTENTS\n\n# Task\n\nAnalyze these Java files from the OpenRudder project and provide specific refactoring suggestions. Focus on:\n\n1. **Code Quality**: Reduce complexity, improve readability\n2. **Performance**: Optimize reactive streams, reduce allocations\n3. **Security**: Identify potential vulnerabilities\n4. **Best Practices**: Spring Boot, reactive programming patterns\n5. **Documentation**: Missing JavaDoc, unclear code\n\nFor each suggestion:\n- Specify the exact file and line numbers\n- Explain the issue and why it matters\n- Provide concrete code changes\n- Rate severity (HIGH/MEDIUM/LOW)\n\nFormat your response as a JSON array:\n\`\`\`json\n[\n  {\n    \"file\": \"path/to/file.java\",\n    \"lines\": \"50-60\",\n    \"severity\": \"HIGH\",\n    \"category\": \"performance\",\n    \"issue\": \"Description\",\n    \"suggestion\": \"Detailed suggestion\",\n    \"code_before\": \"current code\",\n    \"code_after\": \"improved code\"\n  }\n]\n\`\`\`\n\nProvide top 10 most impactful refactorings."
+              }
+            ]
+          }
+          EOF
+          
+          # Call Claude API
+          RESPONSE=$(curl -s -X POST https://api.anthropic.com/v1/messages \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d @/tmp/claude_request.json)
+          
+          # Extract suggestions from response
+          echo "$RESPONSE" | jq -r '.content[0].text' > /tmp/claude_suggestions.txt
+          
+          # Check if we got valid suggestions
+          if grep -q "```json" /tmp/claude_suggestions.txt; then
+            echo "has_suggestions=true" >> $GITHUB_OUTPUT
+            
+            # Extract JSON from markdown code block
+            sed -n '/```json/,/```/p' /tmp/claude_suggestions.txt | sed '1d;$d' > /tmp/refactorings.json
+          else
+            echo "has_suggestions=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create refactoring branch
+        if: steps.claude.outputs.has_suggestions == 'true'
+        run: |
+          BRANCH_NAME="claude-refactor-$(date +%Y%m%d-%H%M%S)"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          
+          git config --global user.name "Claude AI Bot"
+          git config --global user.email "claude-bot@openrudder.io"
+          
+          git checkout -b "$BRANCH_NAME"
+      
+      - name: Apply refactorings
+        if: steps.claude.outputs.has_suggestions == 'true'
+        id: apply
+        run: |
+          # This is a simplified version - you'd want more sophisticated code manipulation
+          # For production, consider using Javaparser or similar tools
+          
+          CHANGES_MADE=0
+          
+          # Read suggestions
+          if [ -f /tmp/refactorings.json ]; then
+            # For each HIGH severity suggestion, create a comment
+            # In a real implementation, you'd parse JSON and apply changes
+            # For now, we'll create an issue with suggestions
+            
+            echo "Refactoring suggestions are ready for review" > /tmp/pr_description.md
+            echo "" >> /tmp/pr_description.md
+            echo "## Automated Refactoring Analysis by Claude" >> /tmp/pr_description.md
+            echo "" >> /tmp/pr_description.md
+            cat /tmp/claude_suggestions.txt >> /tmp/pr_description.md
+            
+            CHANGES_MADE=1
+          fi
+          
+          echo "changes_made=$CHANGES_MADE" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.apply.outputs.changes_made == '1'
+        run: |
+          git add -A
+          git commit -m "refactor: Claude AI suggested improvements
+          
+          - Automated refactoring analysis
+          - Focus: ${{ github.event.inputs.refactor_type || 'code_quality' }}
+          - Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          Co-authored-by: Claude AI <claude@anthropic.com>"
+          
+          git push origin "$BRANCH_NAME"
+      
+      - name: Create Pull Request
+        if: steps.apply.outputs.changes_made == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create \
+            --title "🤖 Claude AI: Refactoring Suggestions - $(date +%Y-%m-%d)" \
+            --body-file /tmp/pr_description.md \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --label "refactoring" \
+            --label "automated" \
+            --label "claude-ai"
+      
+      - name: Create issue for manual review items
+        if: steps.claude.outputs.has_suggestions == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Create an issue for tracking refactoring suggestions
+          cat > /tmp/issue_body.md << 'EOF'
+          ## Claude AI Refactoring Analysis Report
+          
+          **Analysis Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Trigger**: ${{ github.event_name }}
+          **Focus**: ${{ github.event.inputs.refactor_type || 'code_quality' }}
+          
+          ### Summary
+          
+          Claude AI has analyzed the codebase and identified refactoring opportunities.
+          
+          ### Detailed Suggestions
+          
+          EOF
+          
+          cat /tmp/claude_suggestions.txt >> /tmp/issue_body.md
+          
+          gh issue create \
+            --title "📊 Claude Refactoring Report - $(date +%Y-%m-%d)" \
+            --body-file /tmp/issue_body.md \
+            --label "refactoring" \
+            --label "analysis" \
+            --label "claude-ai"
+      
+      - name: Comment on PR (if triggered by PR)
+        if: github.event_name == 'pull_request' && steps.claude.outputs.has_suggestions == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > /tmp/pr_comment.md << 'EOF'
+          ## 🤖 Claude AI Code Review
+          
+          I've analyzed the changes in this PR and have some refactoring suggestions:
+          
+          EOF
+          
+          cat /tmp/claude_suggestions.txt >> /tmp/pr_comment.md
+          
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file /tmp/pr_comment.md
+      
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refactoring-analysis
+          path: |
+            /tmp/claude_suggestions.txt
+            /tmp/refactorings.json
+            /tmp/refactor_context.md
+          retention-days: 30

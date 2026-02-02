@@ -1,0 +1,310 @@
+name: Claude Auto-Refactor (Advanced)
+
+on:
+  workflow_dispatch:
+    inputs:
+      files:
+        description: 'Specific files to refactor (comma-separated)'
+        required: false
+      auto_apply:
+        description: 'Automatically apply safe refactorings'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  intelligent-refactor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      
+      - name: Install JavaParser
+        run: |
+          cat > /tmp/pom-parser.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              
+              <groupId>io.openrudder</groupId>
+              <artifactId>refactor-tool</artifactId>
+              <version>1.0.0</version>
+              
+              <properties>
+                  <maven.compiler.source>21</maven.compiler.source>
+                  <maven.compiler.target>21</maven.compiler.target>
+              </properties>
+              
+              <dependencies>
+                  <dependency>
+                      <groupId>com.github.javaparser</groupId>
+                      <artifactId>javaparser-symbol-solver-core</artifactId>
+                      <version>3.25.8</version>
+                  </dependency>
+                  <dependency>
+                      <groupId>com.google.code.gson</groupId>
+                      <artifactId>gson</artifactId>
+                      <version>2.10.1</version>
+                  </dependency>
+              </dependencies>
+          </project>
+          EOF
+          
+          mkdir -p /tmp/refactor-tool/src/main/java
+          cd /tmp/refactor-tool
+          cp /tmp/pom-parser.xml pom.xml
+      
+      - name: Create refactoring tool
+        run: |
+          cat > /tmp/refactor-tool/src/main/java/RefactorTool.java << 'JAVA_EOF'
+          import com.github.javaparser.*;
+          import com.github.javaparser.ast.*;
+          import com.github.javaparser.ast.body.*;
+          import com.github.javaparser.ast.expr.*;
+          import com.github.javaparser.ast.stmt.*;
+          import com.google.gson.*;
+          import java.io.*;
+          import java.nio.file.*;
+          import java.util.*;
+          
+          public class RefactorTool {
+              
+              public static void main(String[] args) throws IOException {
+                  if (args.length < 2) {
+                      System.err.println("Usage: RefactorTool <suggestions.json> <repo-path>");
+                      System.exit(1);
+                  }
+                  
+                  String suggestionsFile = args[0];
+                  String repoPath = args[1];
+                  
+                  Gson gson = new Gson();
+                  JsonArray suggestions = gson.fromJson(
+                      Files.readString(Paths.get(suggestionsFile)),
+                      JsonArray.class
+                  );
+                  
+                  int applied = 0;
+                  int failed = 0;
+                  
+                  for (JsonElement elem : suggestions) {
+                      JsonObject suggestion = elem.getAsJsonObject();
+                      
+                      try {
+                          if (applySuggestion(suggestion, repoPath)) {
+                              applied++;
+                              System.out.println("✓ Applied: " + suggestion.get("file").getAsString());
+                          } else {
+                              failed++;
+                              System.out.println("✗ Failed: " + suggestion.get("file").getAsString());
+                          }
+                      } catch (Exception e) {
+                          failed++;
+                          System.err.println("Error: " + e.getMessage());
+                      }
+                  }
+                  
+                  System.out.println("\nSummary: " + applied + " applied, " + failed + " failed");
+              }
+              
+              private static boolean applySuggestion(JsonObject suggestion, String repoPath) {
+                  try {
+                      String category = suggestion.get("category").getAsString();
+                      
+                      switch (category) {
+                          case "unused-imports":
+                              return removeUnusedImports(suggestion, repoPath);
+                          case "logger-constant":
+                              return makeLoggerConstant(suggestion, repoPath);
+                          case "simplify-expression":
+                              return simplifyExpression(suggestion, repoPath);
+                          case "add-javadoc":
+                              return addJavadoc(suggestion, repoPath);
+                          default:
+                              return false;
+                      }
+                  } catch (Exception e) {
+                      e.printStackTrace();
+                      return false;
+                  }
+              }
+              
+              private static boolean removeUnusedImports(JsonObject suggestion, String repoPath) 
+                      throws IOException {
+                  String file = suggestion.get("file").getAsString();
+                  Path filePath = Paths.get(repoPath, file);
+                  
+                  CompilationUnit cu = StaticJavaParser.parse(filePath);
+                  
+                  // Remove unused imports (simplified)
+                  cu.getImports().removeIf(imp -> {
+                      String importName = imp.getNameAsString();
+                      // Check if import is used in the code
+                      return !cu.toString().contains(importName.substring(importName.lastIndexOf('.') + 1));
+                  });
+                  
+                  Files.writeString(filePath, cu.toString());
+                  return true;
+              }
+              
+              private static boolean makeLoggerConstant(JsonObject suggestion, String repoPath) 
+                      throws IOException {
+                  String file = suggestion.get("file").getAsString();
+                  Path filePath = Paths.get(repoPath, file);
+                  
+                  CompilationUnit cu = StaticJavaParser.parse(filePath);
+                  
+                  cu.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
+                      cls.getFieldByName("logger").ifPresent(field -> {
+                          field.setStatic(true);
+                          field.setFinal(true);
+                          field.addModifier(Modifier.Keyword.PRIVATE);
+                      });
+                  });
+                  
+                  Files.writeString(filePath, cu.toString());
+                  return true;
+              }
+              
+              private static boolean simplifyExpression(JsonObject suggestion, String repoPath) 
+                      throws IOException {
+                  // Complex - would need specific rules
+                  return false;
+              }
+              
+              private static boolean addJavadoc(JsonObject suggestion, String repoPath) 
+                      throws IOException {
+                  String file = suggestion.get("file").getAsString();
+                  String javadoc = suggestion.get("javadoc").getAsString();
+                  Path filePath = Paths.get(repoPath, file);
+                  
+                  CompilationUnit cu = StaticJavaParser.parse(filePath);
+                  
+                  // Add JavaDoc to classes/methods without it
+                  cu.findAll(ClassOrInterfaceDeclaration.class).forEach(cls -> {
+                      if (!cls.getJavadocComment().isPresent()) {
+                          cls.setJavadocComment(javadoc);
+                      }
+                  });
+                  
+                  Files.writeString(filePath, cu.toString());
+                  return true;
+              }
+          }
+          JAVA_EOF
+      
+      - name: Build refactoring tool
+        run: |
+          cd /tmp/refactor-tool
+          mvn clean package -DskipTests -q
+      
+      - name: Get Claude's analysis
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Get files to analyze
+          if [ -n "${{ github.event.inputs.files }}" ]; then
+            echo "${{ github.event.inputs.files }}" | tr ',' '\n' > /tmp/files_to_analyze.txt
+          else
+            find . -name "*.java" -path "*/src/main/java/*" | head -10 > /tmp/files_to_analyze.txt
+          fi
+          
+          # Read file contents
+          FILE_CONTENTS=""
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              FILE_CONTENTS="$FILE_CONTENTS\n\n## File: $file\n\`\`\`java\n$(cat "$file")\n\`\`\`"
+            fi
+          done < /tmp/files_to_analyze.txt
+          
+          # Call Claude for safe, auto-applicable refactorings
+          cat > /tmp/claude_request.json << EOF
+          {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 16000,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Analyze these Java files and provide ONLY safe, automatically applicable refactorings.\n\n$FILE_CONTENTS\n\n# Instructions\n\nProvide refactorings that are:\n1. **Safe** - No behavior changes\n2. **Automated** - Can be applied by JavaParser\n3. **Low-risk** - Code quality improvements only\n\nCategories to focus on:\n- unused-imports: Remove unused imports\n- logger-constant: Make logger fields static final\n- add-javadoc: Add missing JavaDoc\n- formatting: Fix formatting issues\n\nReturn JSON array:\n\`\`\`json\n[\n  {\n    \"file\": \"path/to/file.java\",\n    \"category\": \"logger-constant\",\n    \"description\": \"Make logger static final\",\n    \"lines\": \"15\",\n    \"safe\": true,\n    \"code_after\": \"private static final Logger logger = ...\"\n  }\n]\n\`\`\`"
+              }
+            ]
+          }
+          EOF
+          
+          RESPONSE=$(curl -s -X POST https://api.anthropic.com/v1/messages \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d @/tmp/claude_request.json)
+          
+          echo "$RESPONSE" | jq -r '.content[0].text' > /tmp/claude_output.txt
+          
+          # Extract JSON
+          if grep -q "```json" /tmp/claude_output.txt; then
+            sed -n '/```json/,/```/p' /tmp/claude_output.txt | sed '1d;$d' > /tmp/suggestions.json
+          else
+            echo "[]" > /tmp/suggestions.json
+          fi
+      
+      - name: Apply refactorings
+        if: github.event.inputs.auto_apply == 'true'
+        run: |
+          cd /tmp/refactor-tool
+          java -cp target/refactor-tool-1.0.0.jar RefactorTool \
+            /tmp/suggestions.json \
+            $GITHUB_WORKSPACE
+      
+      - name: Run tests
+        if: github.event.inputs.auto_apply == 'true'
+        run: |
+          mvn test -q || {
+            echo "Tests failed after refactoring - reverting changes"
+            git checkout .
+            exit 1
+          }
+      
+      - name: Create PR with changes
+        if: github.event.inputs.auto_apply == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            BRANCH="claude-auto-refactor-$(date +%s)"
+            
+            git config user.name "Claude AI Bot"
+            git config user.email "claude-bot@openrudder.io"
+            git checkout -b "$BRANCH"
+            git add -A
+            git commit -m "refactor: automated safe refactorings by Claude AI
+            
+            Applied the following safe refactorings:
+            $(cat /tmp/suggestions.json | jq -r '.[] | "- " + .description + " (" + .file + ")"')
+            
+            All tests passing ✓"
+            
+            git push origin "$BRANCH"
+            
+            gh pr create \
+              --title "🤖 Claude AI: Automated Safe Refactorings" \
+              --body "$(cat /tmp/claude_output.txt)" \
+              --base main \
+              --head "$BRANCH" \
+              --label "refactoring" \
+              --label "automated" \
+              --label "safe-changes"
+          else
+            echo "No changes to commit"
+          fi

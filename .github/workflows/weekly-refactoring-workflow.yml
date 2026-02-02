@@ -1,0 +1,139 @@
+name: Weekly Comprehensive Refactoring
+
+on:
+  # Run every Monday at 9 AM UTC
+  schedule:
+    - cron: '0 9 * * 1'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  comprehensive-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Run comprehensive analysis
+        run: |
+          # Full build with all checks
+          mvn clean install -DskipTests
+          
+          # Code coverage
+          mvn jacoco:prepare-agent test jacoco:report || true
+          
+          # Dependency check
+          mvn versions:display-dependency-updates > /tmp/dependency_updates.txt || true
+          
+          # Generate site reports
+          mvn site || true
+      
+      - name: Analyze each module with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          MODULES=("openrudder-core" "openrudder-sources" "openrudder-query-engine" "openrudder-reactions" "openrudder-spring-boot-starter")
+          
+          for module in "${MODULES[@]}"; do
+            echo "Analyzing $module..."
+            
+            # Get module statistics
+            JAVA_FILES=$(find "./$module" -name "*.java" | wc -l)
+            LINES=$(find "./$module" -name "*.java" -exec wc -l {} + | tail -1 | awk '{print $1}')
+            
+            # Sample files from module (limit to representative classes)
+            find "./$module/src/main/java" -name "*.java" | head -5 > "/tmp/${module}_files.txt"
+            
+            # Create module analysis request
+            cat > "/tmp/${module}_analysis.json" << EOF
+          {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 8000,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Analyze the $module module of OpenRudder project.\n\nModule Purpose:\n- openrudder-core: Core domain models and interfaces\n- openrudder-sources: Data source implementations\n- openrudder-query-engine: Continuous query processing\n- openrudder-reactions: Event reaction handlers\n- openrudder-spring-boot-starter: Spring Boot integration\n\nProvide architectural and design recommendations focusing on:\n1. Module cohesion and coupling\n2. Interface design\n3. Error handling patterns\n4. Testing strategies\n5. Performance considerations\n\nFiles: $JAVA_FILES, Lines: $LINES"
+              }
+            ]
+          }
+          EOF
+            
+            # Call Claude
+            curl -s -X POST https://api.anthropic.com/v1/messages \
+              -H "Content-Type: application/json" \
+              -H "x-api-key: $ANTHROPIC_API_KEY" \
+              -H "anthropic-version: 2023-06-01" \
+              -d @"/tmp/${module}_analysis.json" | \
+              jq -r '.content[0].text' > "/tmp/${module}_recommendations.md"
+          done
+      
+      - name: Create comprehensive report
+        run: |
+          cat > /tmp/weekly_report.md << 'EOF'
+          # 📊 Weekly OpenRudder Refactoring Report
+          
+          **Generated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Executive Summary
+          
+          This weekly report provides comprehensive refactoring recommendations for the OpenRudder project.
+          
+          ## Module Analysis
+          
+          EOF
+          
+          MODULES=("openrudder-core" "openrudder-sources" "openrudder-query-engine" "openrudder-reactions" "openrudder-spring-boot-starter")
+          
+          for module in "${MODULES[@]}"; do
+            echo "### $module" >> /tmp/weekly_report.md
+            echo "" >> /tmp/weekly_report.md
+            
+            if [ -f "/tmp/${module}_recommendations.md" ]; then
+              cat "/tmp/${module}_recommendations.md" >> /tmp/weekly_report.md
+            fi
+            
+            echo "" >> /tmp/weekly_report.md
+            echo "---" >> /tmp/weekly_report.md
+            echo "" >> /tmp/weekly_report.md
+          done
+          
+          # Add dependency updates
+          echo "## Dependency Updates" >> /tmp/weekly_report.md
+          echo "" >> /tmp/weekly_report.md
+          if [ -f /tmp/dependency_updates.txt ]; then
+            cat /tmp/dependency_updates.txt >> /tmp/weekly_report.md
+          fi
+      
+      - name: Create tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "📅 Weekly Refactoring Report - Week of $(date +%Y-%m-%d)" \
+            --body-file /tmp/weekly_report.md \
+            --label "refactoring" \
+            --label "weekly-report" \
+            --label "claude-ai" \
+            --milestone "Continuous Improvement"
+      
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-refactoring-report
+          path: /tmp/weekly_report.md
+          retention-days: 90
