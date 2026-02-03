@@ -128,8 +128,7 @@ jobs:
             --body-file /tmp/weekly_report.md \
             --label "refactoring" \
             --label "weekly-report" \
-            --label "claude-ai" \
-            --milestone "Continuous Improvement"
+            --label "claude-ai"
       
       - name: Upload report
         uses: actions/upload-artifact@v4
