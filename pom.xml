@@ -25,7 +25,7 @@
         <spring-ai.version>0.8.0-SNAPSHOT</spring-ai.version>
         <antlr4.version>4.13.1</antlr4.version>
         <neo4j.version>5.15.0</neo4j.version>
-        <debezium.version>2.5.0.Final</debezium.version>
+        <debezium.version>3.4.1.Final</debezium.version>
         <micrometer.version>1.12.1</micrometer.version>
         <lombok.version>1.18.36</lombok.version>
         <slf4j.version>2.0.9</slf4j.version>
